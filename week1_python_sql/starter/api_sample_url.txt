@@ -1,0 +1,9 @@
+https://jsonplaceholder.typicode.com/users
+https://jsonplaceholder.typicode.com/posts
+https://jsonplaceholder.typicode.com/comments
+
+# Sample API endpoints for bonus challenge
+# These are free, public APIs for testing
+# Rate limit: 1000 requests per hour
+# Format: JSON
+# Documentation: https://jsonplaceholder.typicode.com/ 
