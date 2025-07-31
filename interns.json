@@ -1,1 +1,14 @@
-{}
+{
+  "aunie": {
+    "name": "Aunie",
+    "email": "aunienabillah@gmail.com",
+    "start_date": "2025-07-31",
+    "current_week": 1,
+    "branch": "intern-aunie",
+    "status": "active",
+    "assignments_released": [
+      1
+    ],
+    "last_activity": "2025-07-31"
+  }
+}

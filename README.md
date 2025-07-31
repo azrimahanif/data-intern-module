@@ -1,3 +1,4 @@
+
 # AI Knowledge Assistant - 10-Week Data/AI Internship Program
 
 ## 🎯 Program Overview
