@@ -45,8 +45,29 @@ This folder contains your Week 1 Python & SQL assignments.
 
 ## 📊 Results Summary
 
-[Add your key findings and insights here]
+- Most customers come from USA, Canada and Australia.
+- Highest spending product categories: Electronics, Clothing, and Home & Garden.
+- Average spending is highest among customers aged 25–35.
+- Customer spending tends to increase near the end of the year (especially Nov–Dec).
+- The dataset initially contained some invalid data such as future countries and dates, which were cleaned.
 
 ## 🎯 Learning Outcomes
 
-[Document what you learned during this week] 
+- Learned how to clean and validate data using Python and Pandas.
+- Practiced using SQLite to store, query, and manage customer data.
+- Gained experience creating dashboards using Streamlit for data visualization.
+- Understood the importance of removing invalid entries like future dates or fake country names to maintain data integrity.
+- Improved confidence using Visual Studio Code, managing environments, and debugging issues.
+
+## Streamlit
+
+  You can now view Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://172.16.0.135:8501
+
+  ## Project Overview
+Analyze customer purchasing behavior from different countries and product categories using:
+- Python (Pandas, SQLite)
+- Streamlit (dashboard)
+- SQL queries
