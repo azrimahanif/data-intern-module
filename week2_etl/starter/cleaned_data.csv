@@ -1,0 +1,25 @@
+customer_id,customer_name,email,age,city,state,country,signup_date,last_purchase,product_category,amount,currency,rating,status
+1,John Smith,john.smith@email.com,28.0,New York,NY,USA,2023-01-15,2023-12-01,Electronics,299.99,USD,4.5,Active
+2,Jane Doe,jane.doe@email.com,32.0,Los Angeles,CA,USA,2023-02-20,2023-11-28,Clothing,89.5,USD,4.2,Active
+4,Alice Brown,alice.brown@email.com,29.0,Toronto,ON,Canada,2023-01-25,2023-11-30,Electronics,450.0,CAD,4.7,Active
+6,Sarah Davis,sarah.davis@email.com,27.0,Sydney,NSW,Australia,2023-02-15,2023-11-25,Clothing,75.0,AUD,4.3,Active
+7,Michael Lee,michael.lee@email.com,31.0,Seattle,WA,USA,2023-03-20,2023-12-03,Electronics,199.99,USD,4.6,Active
+8,Emily Chen,emily.chen@email.com,26.0,Vancouver,BC,Canada,2023-01-30,2023-11-29,Books,15.5,CAD,3.9,Active
+9,David Kim,david.kim@email.com,33.0,San Francisco,CA,USA,2023-02-25,2023-12-04,Electronics,599.99,USD,4.8,Active
+10,Lisa Wang,lisa.wang@email.com,28.0,Melbourne,VIC,Australia,2023-03-15,2023-11-27,Clothing,95.0,AUD,4.4,Active
+11,Tom Anderson,tom.anderson@email.com,30.0,Boston,MA,USA,2023-01-20,2023-12-06,Home & Garden,180.0,USD,4.0,Active
+12,Jessica Taylor,jessica.t@email.com,29.0,Montreal,QC,Canada,2023-02-28,2023-11-26,Books,22.0,CAD,3.7,Active
+13,Alex Rodriguez,alex.r@email.com,34.0,Miami,FL,USA,2023-03-25,2023-12-07,Electronics,350.0,USD,4.5,Active
+15,James Wilson,james.wilson@email.com,31.0,Perth,WA,Australia,2023-02-18,2023-12-08,Home & Garden,150.0,AUD,4.1,Active
+16,Emma Thompson,emma.t@email.com,26.0,Calgary,AB,Canada,2023-03-30,2023-11-23,Books,18.5,CAD,3.8,Active
+17,Daniel Martinez,daniel.m@email.com,33.0,Phoenix,AZ,USA,2023-01-05,2023-12-09,Electronics,275.0,USD,4.4,Active
+19,Ryan Johnson,ryan.j@email.com,30.0,Edmonton,AB,Canada,2023-03-12,2023-12-10,Home & Garden,200.0,CAD,4.0,Active
+20,Olivia Davis,olivia.d@email.com,25.0,Portland,OR,USA,2023-01-18,2023-11-21,Books,12.0,USD,3.6,Active
+22,Amanda Wilson,amanda.w@email.com,29.0,Brisbane,QLD,Australia,2023-03-08,2023-11-20,Clothing,85.0,AUD,4.5,Active
+23,Kevin Chen,kevin.chen@email.com,31.0,Ottawa,ON,Canada,2023-01-22,2023-12-12,Home & Garden,175.0,CAD,4.2,Active
+24,Rachel Kim,rachel.kim@email.com,27.0,Denver,CO,USA,2023-02-16,2023-11-19,Books,20.0,USD,3.9,Active
+26,Julia Rodriguez,julia.r@email.com,28.0,Adelaide,SA,Australia,2023-01-28,2023-11-18,Clothing,90.0,AUD,4.4,Active
+27,Paul Garcia,paul.g@email.com,30.0,Winnipeg,MB,Canada,2023-02-24,2023-12-14,Home & Garden,160.0,CAD,4.1,Active
+28,Nicole Martinez,nicole.m@email.com,26.0,Las Vegas,NV,USA,2023-03-22,2023-11-17,Books,16.5,USD,3.7,Active
+30,Lauren Wilson,lauren.w@email.com,29.0,Hobart,TAS,Australia,2023-02-26,2023-11-16,Clothing,80.0,AUD,4.3,Active
+32,Duplicate Name,john.smith@email.com,28.0,New York,NY,USA,2023-01-15,2023-12-01,Electronics,299.99,USD,4.5,Active

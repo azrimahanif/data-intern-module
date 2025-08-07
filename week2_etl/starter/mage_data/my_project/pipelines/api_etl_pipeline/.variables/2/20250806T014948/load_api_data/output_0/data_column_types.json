@@ -1,0 +1,1 @@
+{"Unnamed: 0.1": "int64", "Unnamed: 0": "int64", "customer_id": "int64", "name": "str", "email": "str", "age": "int64", "city": "str", "country": "str", "join_date": "str", "subscription_type": "str", "monthly_spend": "float64", "last_purchase_date": "str", "status": "str"}

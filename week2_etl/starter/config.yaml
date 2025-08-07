@@ -1,0 +1,8 @@
+extract:
+  path: data.csv
+
+transform:
+  dropna: true
+
+load:
+  path: cleaned_data.csv

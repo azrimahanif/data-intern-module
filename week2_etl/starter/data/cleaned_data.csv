@@ -1,0 +1,21 @@
+,Unnamed: 0.1,Unnamed: 0,customer_id,name,email,age,city,country,join_date,subscription_type,monthly_spend,last_purchase_date,status
+0,0,0,1001,John Smith,john.smith@email.com,28,New York,USA,2023-01-15,Premium,89.99,2024-07-20,active
+1,1,1,1002,Jane Doe,jane.doe@email.com,32,London,UK,2023-02-10,Basic,29.99,2024-07-18,active
+2,2,2,1003,Bob Johnson,bob.johnson@email.com,45,Toronto,Canada,2023-03-05,Premium,89.99,2024-07-15,active
+3,3,3,1004,Alice Brown,alice.brown@email.com,29,Sydney,Australia,2023-04-12,Basic,29.99,2024-07-10,inactive
+4,4,4,1005,Charlie Wilson,charlie.wilson@email.com,38,Berlin,Germany,2023-05-20,Premium,89.99,2024-07-12,active
+5,5,5,1006,Diana Davis,diana.davis@email.com,26,Paris,France,2023-06-08,Basic,29.99,2024-07-05,active
+6,6,6,1007,Edward Miller,edward.miller@email.com,41,Tokyo,Japan,2023-07-14,Premium,89.99,2024-07-08,active
+7,7,7,1008,Fiona Garcia,fiona.garcia@email.com,33,Mexico City,Mexico,2023-08-22,Basic,29.99,2024-07-03,inactive
+8,8,8,1009,George Lee,george.lee@email.com,35,Singapore,Singapore,2023-09-30,Premium,89.99,2024-07-01,active
+9,9,9,1010,Helen Taylor,helen.taylor@email.com,27,Amsterdam,Netherlands,2023-10-05,Basic,29.99,2024-06-28,active
+10,10,10,1011,Ian Anderson,ian.anderson@email.com,44,Stockholm,Sweden,2023-11-12,Premium,89.99,2024-06-25,active
+11,11,11,1012,Julia Martinez,julia.martinez@email.com,31,Rome,Italy,2023-12-18,Basic,29.99,2024-06-22,active
+12,12,12,1013,Kevin Thompson,kevin.thompson@email.com,39,Madrid,Spain,2024-01-25,Premium,89.99,2024-06-20,active
+13,13,13,1014,Lisa White,lisa.white@email.com,28,Vienna,Austria,2024-02-03,Basic,29.99,2024-06-18,active
+14,14,14,1015,Mark Harris,mark.harris@email.com,42,Prague,Czech Republic,2024-03-10,Premium,89.99,2024-06-15,active
+15,15,15,1016,Nina Clark,nina.clark@email.com,30,Budapest,Hungary,2024-04-17,Basic,29.99,2024-06-12,active
+16,16,16,1017,Oscar Lewis,oscar.lewis@email.com,36,Warsaw,Poland,2024-05-24,Premium,89.99,2024-06-10,active
+17,17,17,1018,Patricia Hall,patricia.hall@email.com,29,Oslo,Norway,2024-06-01,Basic,29.99,2024-06-08,active
+18,18,18,1019,Quentin Young,quentin.young@email.com,43,Copenhagen,Denmark,2024-07-08,Premium,89.99,2024-06-05,active
+19,19,19,1020,Rachel King,rachel.king@email.com,25,Helsinki,Finland,2024-08-15,Basic,29.99,2024-06-02,active 
