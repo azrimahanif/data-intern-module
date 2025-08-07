@@ -3,12 +3,13 @@
     "name": "Aunie",
     "email": "aunienabillah@gmail.com",
     "start_date": "2025-07-31",
-    "current_week": 1,
+    "current_week": 3,
     "branch": "intern-aunie",
     "status": "active",
     "assignments_released": [
-      1
+      1,
+      3
     ],
-    "last_activity": "2025-07-31"
+    "last_activity": "2025-08-07"
   }
 }
