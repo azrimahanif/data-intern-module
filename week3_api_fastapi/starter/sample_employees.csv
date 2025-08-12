@@ -1,0 +1,11 @@
+employee_id,name,email,department,position,salary,hire_date,status
+EMP001,John Smith,john.smith@company.com,Engineering,Senior Developer,75000,2022-01-15,active
+EMP002,Sarah Johnson,sarah.johnson@company.com,Marketing,Marketing Manager,65000,2021-06-20,active
+EMP003,Mike Davis,mike.davis@company.com,Sales,Sales Representative,50000,2023-03-10,active
+EMP004,Emily Brown,emily.brown@company.com,HR,HR Specialist,55000,2022-08-05,active
+EMP005,David Wilson,david.wilson@company.com,Engineering,Junior Developer,60000,2023-01-12,active
+EMP006,Lisa Anderson,lisa.anderson@company.com,Finance,Financial Analyst,70000,2021-11-30,inactive
+EMP007,Tom Garcia,tom.garcia@company.com,Operations,Operations Manager,80000,2020-09-15,active
+EMP008,Jennifer Lee,jennifer.lee@company.com,Engineering,DevOps Engineer,85000,2022-04-01,active
+EMP009,Robert Taylor,robert.taylor@company.com,Sales,Sales Manager,90000,2019-12-10,active
+EMP010,Amanda Clark,amanda.clark@company.com,Marketing,Content Specialist,45000,2023-05-20,active
