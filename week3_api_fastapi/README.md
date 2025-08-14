@@ -104,26 +104,49 @@ week3_api_fastapi/
     └── README.md                     # Project documentation
 ```
 
-## 🚀 Detailed Implementation Guide
+## 🚀 Step-by-Step Implementation Guide
 
-### Phase 1: Project Setup & Basic API (25 points)
+> **Important**: Follow these steps exactly in order. Test each phase before moving to the next!
 
-#### Step 1.1: Environment Setup
+### 🔧 **Setup Phase: Environment & Tools**
+
+#### Step 0.1: Install Required Tools
+1. **Download and install Postman**: https://www.postman.com/downloads/
+2. **Verify Python installation**: `python --version` (should be 3.9+)
+
+#### Step 0.2: Project Setup
 1. **Create virtual environment:**
    ```bash
+   # Navigate to submission folder
+   cd week3_api_fastapi/submission
+   
+   # Create virtual environment
    python -m venv venv
-   venv\Scripts\activate  # Windows
-   # source venv/bin/activate  # Linux/Mac
+   
+   # Activate it (Windows)
+   venv\Scripts\activate
+   
+   # For Mac/Linux:
+   # source venv/bin/activate
    ```
 
 2. **Install required packages:**
    ```bash
-   pip install fastapi uvicorn sqlalchemy pandas openpyxl python-multipart python-dotenv
+   # Copy from starter folder or install directly
+   pip install fastapi uvicorn sqlalchemy pandas openpyxl python-multipart python-dotenv pytest httpx
    ```
 
-3. **Create basic project structure** (see folder structure above)
+3. **Create project structure** (see required folder structure above)
 
-#### Step 1.2: Basic FastAPI Application
+4. **Copy environment file:**
+   ```bash
+   # Copy from starter/env_example.txt to .env
+   # Edit .env with your database settings
+   ```
+
+### Phase 1: Basic FastAPI Setup & Testing (25 points)
+
+#### Step 1.1: Create Basic FastAPI App
 Create `submission/main.py`:
 ```python
 from fastapi import FastAPI
@@ -151,9 +174,29 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-#### Step 1.3: Pydantic Models
+#### Step 1.2: Test Basic Setup
+1. **Start the server:**
+   ```bash
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+2. **Open Postman and test:**
+   - **GET** `http://localhost:8000/` 
+     - Should return: `{"message": "Employee Data Management API", "version": "1.0.0"}`
+   - **GET** `http://localhost:8000/health`
+     - Should return: `{"status": "healthy"}`
+
+3. **Check automatic docs:**
+   - Visit: `http://localhost:8000/docs`
+   - You should see interactive API documentation
+
+#### Step 1.3: Create Pydantic Models
 Create `submission/models/employee.py`:
 ```python
 from pydantic import BaseModel, EmailStr, validator
@@ -328,35 +371,41 @@ class FileProcessor:
         return cleaned_data, errors
 ```
 
-### Phase 3: Database Integration (25 points)
+### Phase 3: Database Integration & Testing (25 points)
 
-#### Step 3.1: Database Models
-Create `submission/models/database.py`:
-```python
-from sqlalchemy import Column, Integer, String, Float, DateTime, Enum
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
-from models.employee import EmployeeStatus
+#### Step 3.1: Setup Local Database
+1. **Create .env file** (copy from starter/env_example.txt):
+   ```bash
+   DATABASE_URL=sqlite:///./employees.db
+   DEBUG=True
+   ```
 
-Base = declarative_base()
+2. **Create database models** `submission/models/database.py`:
+   ```python
+   from sqlalchemy import Column, Integer, String, Float, DateTime, Enum
+   from sqlalchemy.ext.declarative import declarative_base
+   from sqlalchemy.sql import func
+   from models.employee import EmployeeStatus
 
-class Employee(Base):
-    __tablename__ = "employees"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    employee_id = Column(String, unique=True, index=True)
-    name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
-    department = Column(String, index=True)
-    position = Column(String)
-    salary = Column(Float)
-    hire_date = Column(DateTime)
-    status = Column(Enum(EmployeeStatus), default=EmployeeStatus.ACTIVE)
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
-```
+   Base = declarative_base()
 
-#### Step 3.2: Database Connection
+   class Employee(Base):
+       __tablename__ = "employees"
+       
+       id = Column(Integer, primary_key=True, index=True)
+       employee_id = Column(String, unique=True, index=True)
+       name = Column(String, index=True)
+       email = Column(String, unique=True, index=True)
+       department = Column(String, index=True)
+       position = Column(String)
+       salary = Column(Float)
+       hire_date = Column(DateTime)
+       status = Column(Enum(EmployeeStatus), default=EmployeeStatus.ACTIVE)
+       created_at = Column(DateTime, server_default=func.now())
+       updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+   ```
+
+#### Step 3.2: Database Connection Setup
 Create `submission/database/connection.py`:
 ```python
 from sqlalchemy import create_engine
@@ -370,7 +419,7 @@ load_dotenv()
 # Database URL (SQLite for development)
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./employees.db")
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create tables
@@ -384,15 +433,263 @@ def get_db():
         db.close()
 ```
 
-### Phase 4: Complete Implementation Tasks
+#### Step 3.3: Create CRUD Operations
+Create `submission/database/crud.py`:
+```python
+from sqlalchemy.orm import Session
+from models.database import Employee
+from models.employee import EmployeeCreate, EmployeeUpdate
+from typing import List, Optional
 
-#### Your Tasks:
-1. **Complete CRUD Operations**: Implement employee CRUD endpoints in `routers/employees.py`
-2. **Database Integration**: Connect file processor to save data to database
-3. **Analytics Endpoints**: Add endpoints for salary statistics and department analysis
-4. **Error Handling**: Implement comprehensive error handling
-5. **Testing**: Write tests for all endpoints
-6. **Documentation**: Add API documentation and usage examples
+def create_employee(db: Session, employee: EmployeeCreate):
+    db_employee = Employee(**employee.dict())
+    db.add(db_employee)
+    db.commit()
+    db.refresh(db_employee)
+    return db_employee
+
+def get_employee(db: Session, employee_id: int):
+    return db.query(Employee).filter(Employee.id == employee_id).first()
+
+def get_employees(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Employee).offset(skip).limit(limit).all()
+
+def update_employee(db: Session, employee_id: int, employee_update: EmployeeUpdate):
+    db_employee = db.query(Employee).filter(Employee.id == employee_id).first()
+    if db_employee:
+        update_data = employee_update.dict(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(db_employee, field, value)
+        db.commit()
+        db.refresh(db_employee)
+    return db_employee
+
+def delete_employee(db: Session, employee_id: int):
+    db_employee = db.query(Employee).filter(Employee.id == employee_id).first()
+    if db_employee:
+        db.delete(db_employee)
+        db.commit()
+    return db_employee
+```
+
+#### Step 3.4: Test Database Connection
+1. **Restart your FastAPI server**
+2. **Check if database file is created**: Look for `employees.db` in your submission folder
+3. **Test database in Postman**: You should be able to create employees through your API now
+
+### Phase 4: Complete CRUD Endpoints & Testing (20 points)
+
+#### Step 4.1: Create Employee CRUD Endpoints
+Create `submission/routers/employees.py`:
+```python
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+from models.employee import EmployeeCreate, EmployeeUpdate, EmployeeResponse
+from database.connection import get_db
+from database import crud
+
+router = APIRouter(prefix="/employees", tags=["employees"])
+
+@router.post("/", response_model=EmployeeResponse)
+def create_employee(employee: EmployeeCreate, db: Session = Depends(get_db)):
+    return crud.create_employee(db=db, employee=employee)
+
+@router.get("/", response_model=List[EmployeeResponse])
+def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud.get_employees(db, skip=skip, limit=limit)
+
+@router.get("/{employee_id}", response_model=EmployeeResponse)
+def read_employee(employee_id: int, db: Session = Depends(get_db)):
+    db_employee = crud.get_employee(db, employee_id=employee_id)
+    if db_employee is None:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    return db_employee
+
+@router.put("/{employee_id}", response_model=EmployeeResponse)
+def update_employee(employee_id: int, employee: EmployeeUpdate, db: Session = Depends(get_db)):
+    db_employee = crud.update_employee(db, employee_id=employee_id, employee_update=employee)
+    if db_employee is None:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    return db_employee
+
+@router.delete("/{employee_id}")
+def delete_employee(employee_id: int, db: Session = Depends(get_db)):
+    db_employee = crud.delete_employee(db, employee_id=employee_id)
+    if db_employee is None:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    return {"message": "Employee deleted successfully"}
+```
+
+#### Step 4.2: Update main.py to include routers
+Update `submission/main.py`:
+```python
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from routers import employees, files
+
+app = FastAPI(
+    title="Employee Data Management API",
+    description="API for processing Excel files and managing employee data",
+    version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(employees.router)
+app.include_router(files.router)
+
+@app.get("/")
+async def root():
+    return {"message": "Employee Data Management API", "version": "1.0.0"}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+## 🧪 **Complete API Testing with Postman**
+
+### **Step-by-Step Testing Instructions**
+
+#### **1. Start Your API Server**
+```bash
+# From submission/ directory
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+#### **2. Test Basic Endpoints**
+**✅ Test 1: Health Check**
+- **Method**: GET
+- **URL**: `http://localhost:8000/health`
+- **Expected**: `{"status": "healthy"}`
+
+**✅ Test 2: API Info**
+- **Method**: GET  
+- **URL**: `http://localhost:8000/`
+- **Expected**: `{"message": "Employee Data Management API", "version": "1.0.0"}`
+
+#### **3. Test Employee CRUD Operations**
+
+**✅ Test 3: Create Employee**
+- **Method**: POST
+- **URL**: `http://localhost:8000/employees/`
+- **Headers**: `Content-Type: application/json`
+- **Body** (raw JSON):
+```json
+{
+  "employee_id": "EMP001",
+  "name": "John Smith",
+  "email": "john.smith@company.com",
+  "department": "Engineering",
+  "position": "Senior Developer",
+  "salary": 75000,
+  "hire_date": "2022-01-15T00:00:00",
+  "status": "active"
+}
+```
+- **Expected**: Returns created employee with ID and timestamps
+
+**✅ Test 4: Get All Employees**
+- **Method**: GET
+- **URL**: `http://localhost:8000/employees/`
+- **Expected**: Array of all employees
+
+**✅ Test 5: Get Specific Employee**
+- **Method**: GET
+- **URL**: `http://localhost:8000/employees/1`
+- **Expected**: Single employee data
+
+**✅ Test 6: Update Employee**
+- **Method**: PUT
+- **URL**: `http://localhost:8000/employees/1`
+- **Headers**: `Content-Type: application/json`
+- **Body** (raw JSON):
+```json
+{
+  "salary": 80000,
+  "position": "Lead Developer"
+}
+```
+- **Expected**: Updated employee data
+
+**✅ Test 7: Delete Employee**
+- **Method**: DELETE
+- **URL**: `http://localhost:8000/employees/1`
+- **Expected**: `{"message": "Employee deleted successfully"}`
+
+#### **4. Test File Upload**
+
+**✅ Test 8: Upload Excel File**
+- **Method**: POST
+- **URL**: `http://localhost:8000/files/upload-excel`
+- **Body**: form-data
+  - **Key**: `file` (type: File)
+  - **Value**: Select the `sample_employees.xlsx` from starter folder
+- **Expected**: 
+```json
+{
+  "filename": "sample_employees.xlsx",
+  "message": "File processed successfully",
+  "processed_records": 10,
+  "errors": []
+}
+```
+
+**✅ Test 9: Verify File Data Was Saved**
+- **Method**: GET
+- **URL**: `http://localhost:8000/employees/`
+- **Expected**: Should now contain employees from the Excel file
+
+#### **5. Test Error Handling**
+
+**✅ Test 10: Invalid Employee Data**
+- **Method**: POST
+- **URL**: `http://localhost:8000/employees/`
+- **Body**: 
+```json
+{
+  "employee_id": "EMP999",
+  "name": "Test User",
+  "email": "invalid-email",
+  "salary": -1000
+}
+```
+- **Expected**: Validation errors
+
+**✅ Test 11: Employee Not Found**
+- **Method**: GET
+- **URL**: `http://localhost:8000/employees/999`
+- **Expected**: 404 error with "Employee not found"
+
+### **Postman Collection Setup**
+1. **Create New Collection**: "Employee API Tests"
+2. **Add Environment**: 
+   - Variable: `base_url`
+   - Value: `http://localhost:8000`
+3. **Save All Tests**: Save each test above as requests in your collection
+4. **Export Collection**: Save as JSON for submission
+
+### **Database Verification**
+After testing, check your database:
+1. **SQLite Browser** (optional): Download and open `employees.db` file
+2. **Command Line**: 
+```bash
+sqlite3 employees.db
+.tables
+SELECT * FROM employees;
+```
 
 ## 🎯 Evaluation Criteria
 
@@ -419,13 +716,15 @@ def get_db():
 **Friday, 5:00 PM**
 
 ### Submission Checklist
-- [ ] All phases completed and working
-- [ ] Code follows the required project structure
-- [ ] API endpoints tested and documented
-- [ ] Sample Excel file processing works
-- [ ] Database operations functional
-- [ ] README.md with setup and usage instructions
-- [ ] Requirements.txt with all dependencies
+- [ ] **All 4 phases completed and working**
+- [ ] **Code follows the required project structure**
+- [ ] **All 11 Postman tests passing**
+- [ ] **Sample Excel file processing works**
+- [ ] **Database operations functional (SQLite file created)**
+- [ ] **Postman collection exported as JSON**
+- [ ] **README.md with setup and usage instructions**
+- [ ] **Requirements.txt with all dependencies**
+- [ ] **Screenshots of successful Postman tests**
 
 ### Running Your Application
 ```bash
@@ -439,39 +738,33 @@ Once running, visit:
 - Interactive API docs: http://localhost:8000/docs
 - Alternative docs: http://localhost:8000/redoc
 
-## 🧪 Testing Your Implementation
+## 📋 **Implementation Checklist**
 
-### Manual Testing Steps
-1. **Start the API server**
-2. **Test basic endpoints**:
-   - GET `/` - Should return API information
-   - GET `/health` - Should return health status
-3. **Test file upload**:
-   - POST `/files/upload-excel` with sample Excel file
-   - Verify data processing and storage
-4. **Test CRUD operations**:
-   - GET `/employees/` - List all employees
-   - POST `/employees/` - Create new employee
-   - GET `/employees/{id}` - Get specific employee
-   - PUT `/employees/{id}` - Update employee
-   - DELETE `/employees/{id}` - Delete employee
+Before testing, ensure you have completed:
 
-### Sample API Requests
-```bash
-# Upload Excel file
-curl -X POST "http://localhost:8000/files/upload-excel" \
-     -H "accept: application/json" \
-     -H "Content-Type: multipart/form-data" \
-     -F "file=@sample_employees.xlsx"
+### **Phase 1 Checklist** ✅
+- [ ] Created basic FastAPI app in `main.py`
+- [ ] Added health and root endpoints
+- [ ] Created Pydantic models in `models/employee.py`
+- [ ] Tested basic endpoints in Postman
 
-# Get all employees
-curl -X GET "http://localhost:8000/employees/" \
-     -H "accept: application/json"
+### **Phase 2 Checklist** ✅
+- [ ] Created file upload router in `routers/files.py`
+- [ ] Implemented file processing service in `services/file_processor.py`
+- [ ] Added Excel/CSV reading with pandas
+- [ ] Tested file upload in Postman
 
-# Get employee by ID
-curl -X GET "http://localhost:8000/employees/1" \
-     -H "accept: application/json"
-```
+### **Phase 3 Checklist** ✅
+- [ ] Created database models in `models/database.py`
+- [ ] Set up database connection in `database/connection.py`
+- [ ] Implemented CRUD operations in `database/crud.py`
+- [ ] Verified database file creation
+
+### **Phase 4 Checklist** ✅
+- [ ] Created employee router in `routers/employees.py`
+- [ ] Added all CRUD endpoints
+- [ ] Updated main.py to include routers
+- [ ] Completed all 11 Postman tests above
 
 ## 📚 Suggested Resources
 
