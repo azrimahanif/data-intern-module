@@ -18,12 +18,35 @@ This folder contains your Week3 Api Fastapi assignments.
 
 ## 🚀 How to Run
 
-[Add setup and run instructions here]
+1. Create and activate a virtual environment:
+        python -m venv venv
+        # activate (Windows PowerShell)
+        venv\Scripts\activate
+2. Install dependencies:
+        pip install -r requirements.txt
+3. Start API server:
+        uvicorn main:app --reload
+4. The server will be running at:
+        http://Localhost:8000
+5. Upload Excel File
+6. View Stored data
 
 ## 📊 Results Summary
 
-[Add your results and findings here]
+1. Excel file successfully uploaded to the API.
+2. Data stored in employees.db (SQLite database).
+        /employees/ lists all employees.
+
+3. CRUD operations tested:
+        Create → Add a new employee
+        Read → List or get employee details
+        Update → Modify employee information
+        Delete → Remove an employee
 
 ## 🎯 Learning Outcomes
 
-[Document what you learned during this week]
+1. How to build an API with FastAPI.
+2. How to read and process Excel files using pandas.
+3. How to store data in a database using SQLAlchemy.
+4. How to validate data using Pydantic.
+5. How to test APIs with Swagger UI.
