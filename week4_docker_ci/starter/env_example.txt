@@ -1,0 +1,26 @@
+# Copy this file to .env in your submission folder
+# Database Configuration
+# Development (SQLite)
+DATABASE_URL=sqlite:///./employees.db
+
+# Production (PostgreSQL on Render)
+# DATABASE_URL=postgresql://username:password@host:port/database_name
+
+# API Configuration
+API_HOST=0.0.0.0
+API_PORT=8000
+DEBUG=True
+
+# File Upload Configuration
+MAX_FILE_SIZE=10485760  # 10MB in bytes
+UPLOAD_FOLDER=uploads
+ALLOWED_EXTENSIONS=xlsx,xls,csv
+
+# Security
+SECRET_KEY=your-secret-key-here-change-in-production
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Render Specific
+RENDER=true
+RENDER_EXTERNAL_HOSTNAME=your-app-name.onrender.com
