@@ -18,12 +18,38 @@ This folder contains your Week4 Docker Ci assignments.
 
 ## 🚀 How to Run
 
-[Add setup and run instructions here]
+1. Set up environment
+cp submission/.env.example submission/.env
+
+2. Install dependencies
+pip install -r submission/requirements.txt
+
+3. Run the FastAPI app
+uvicorn submission.main:app --reload
+
+4. Run with docker
+docker build -t week4_app submission/
+docker run -p 8000:8000 week4_app
+
 
 ## 📊 Results Summary
 
-[Add your results and findings here]
+1. All unit tests passed 
+
+2. Security scan completed without major issues
+
+3. Docker container builds successfully
+
+4. CI/CD workflow triggers correctly on push to main (after .github/workflows/deploy.yml is moved to the root)
 
 ## 🎯 Learning Outcomes
 
-[Document what you learned during this week]
+1. Learned how to set up a CI/CD pipeline using GitHub Actions
+
+2. Managed Python environment and dependencies
+
+3. Ran unit tests and security scans effectively
+
+4. Built and deployed a Docker container for a FastAPI app
+
+5. Gained practical experience in repository structure for GitHub Actions workflows
