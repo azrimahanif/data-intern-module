@@ -7,6 +7,7 @@ This helps mentors release assignments week by week, teaching proper Git workflo
 import os
 import sys
 import subprocess
+import shutil
 from datetime import datetime, timedelta
 
 class AssignmentReleaser:
@@ -23,6 +24,9 @@ class AssignmentReleaser:
             "week9_capstone",
             "week10_presentation"
         ]
+        
+        # Create secure backup directory (hidden from interns)
+        self.secure_backup_dir = ".secure_assignments"
         
     def check_git_status(self):
         """Check if we're in a git repository and on main branch"""
@@ -44,6 +48,21 @@ class AssignmentReleaser:
         except Exception as e:
             print(f"❌ Error checking git status: {e}")
             return False
+    
+    def setup_secure_backups(self):
+        """Set up secure backup system to prevent interns from seeing future weeks"""
+        if not os.path.exists(self.secure_backup_dir):
+            os.makedirs(self.secure_backup_dir)
+            print(f"✅ Created secure backup directory: {self.secure_backup_dir}")
+            
+        # Move all backup folders to secure location
+        for week in self.weeks:
+            backup_folder = f"{week}_backup"
+            if os.path.exists(backup_folder):
+                secure_path = os.path.join(self.secure_backup_dir, f"{week}_backup")
+                if not os.path.exists(secure_path):
+                    shutil.move(backup_folder, secure_path)
+                    print(f"✅ Moved {backup_folder} to secure location")
     
     def release_week(self, week_number):
         """Release assignments for a specific week"""
@@ -102,12 +121,27 @@ class AssignmentReleaser:
         return True
         
     def lock_future_weeks(self, current_week):
-        """Lock future weeks by removing their content"""
+        """Lock future weeks by removing their content and storing securely"""
         print(f"🔒 Locking future weeks (after week {current_week})...")
+        
+        # Ensure secure backup directory exists
+        self.setup_secure_backups()
         
         for i in range(current_week, len(self.weeks)):
             week_folder = self.weeks[i]
             if os.path.exists(week_folder):
+                # Check if content exists (not just placeholder)
+                readme_path = os.path.join(week_folder, "README.md")
+                if os.path.exists(readme_path):
+                    with open(readme_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                        if "Assignment Locked" not in content:
+                            # This has real content, backup it securely
+                            secure_path = os.path.join(self.secure_backup_dir, f"{week_folder}_backup")
+                            if not os.path.exists(secure_path):
+                                shutil.copytree(week_folder, secure_path)
+                                print(f"✅ Backed up {week_folder} to secure location")
+                
                 # Create a placeholder README
                 placeholder_content = f"""# Week {i+1}: {week_folder.replace('_', ' ').title()}
 
@@ -134,12 +168,8 @@ git push origin week{i+1}-assignment
 Stay tuned for the release! 🚀
 """
                 
-                # Save current content to backup
-                backup_folder = f"{week_folder}_backup"
-                if not os.path.exists(backup_folder):
-                    os.rename(week_folder, backup_folder)
-                
-                # Create new folder with placeholder
+                # Remove current content and create placeholder
+                shutil.rmtree(week_folder)
                 os.makedirs(week_folder, exist_ok=True)
                 with open(f"{week_folder}/README.md", 'w', encoding='utf-8') as f:
                     f.write(placeholder_content)
@@ -147,26 +177,25 @@ Stay tuned for the release! 🚀
                 print(f"✅ Locked {week_folder}")
     
     def unlock_week(self, week_number):
-        """Unlock a specific week by restoring its content"""
+        """Unlock a specific week by restoring its content from secure backup"""
         if week_number < 1 or week_number > 10:
             print("❌ Invalid week number. Must be between 1 and 10.")
             return False
             
         week_folder = self.weeks[week_number - 1]
-        backup_folder = f"{week_folder}_backup"
+        secure_backup_path = os.path.join(self.secure_backup_dir, f"{week_folder}_backup")
         
-        if not os.path.exists(backup_folder):
-            print(f"❌ No backup found for {week_folder}")
+        if not os.path.exists(secure_backup_path):
+            print(f"❌ No secure backup found for {week_folder}")
             return False
             
         # Remove current placeholder
         if os.path.exists(week_folder):
-            import shutil
             shutil.rmtree(week_folder)
         
-        # Restore from backup
-        os.rename(backup_folder, week_folder)
-        print(f"✅ Unlocked {week_folder}")
+        # Restore from secure backup
+        shutil.copytree(secure_backup_path, week_folder)
+        print(f"✅ Unlocked {week_folder} from secure backup")
         
         return True
     
@@ -176,7 +205,8 @@ Stay tuned for the release! 🚀
         print("=" * 50)
         
         for i, week in enumerate(self.weeks, 1):
-            status = "🔒 Locked" if os.path.exists(f"{week}_backup") else "✅ Available"
+            secure_backup_path = os.path.join(self.secure_backup_dir, f"{week}_backup")
+            status = "🔒 Locked" if os.path.exists(secure_backup_path) else "✅ Available"
             print(f"Week {i:2d}: {week:<20} {status}")
     
     def create_release_notes(self, week_number):
@@ -246,6 +276,7 @@ def main():
         print("  python release_assignments.py lock <current_week>       # Lock future weeks")
         print("  python release_assignments.py unlock <week_number>      # Unlock a week")
         print("  python release_assignments.py notes <week_number>       # Create release notes")
+        print("  python release_assignments.py secure                   # Set up secure backup system")
         return
     
     command = sys.argv[1]
@@ -283,6 +314,10 @@ def main():
             return
         week_number = int(sys.argv[2])
         releaser.create_release_notes(week_number)
+    
+    elif command == "secure":
+        releaser.setup_secure_backups()
+        print("✅ Secure backup system initialized")
     
     else:
         print(f"❌ Unknown command: {command}")
