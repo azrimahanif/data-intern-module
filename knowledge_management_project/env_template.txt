@@ -1,0 +1,59 @@
+# AI-Powered Knowledge Management System
+# Environment Configuration Template
+
+# OpenAI Configuration
+# Get your API key from: https://platform.openai.com/api-keys
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Qdrant Vector Database
+# Your Qdrant instance at: https://qdrant.aafiyat2u.net/
+QDRANT_URL=https://qdrant.aafiyat2u.net/
+QDRANT_API_KEY=your_qdrant_api_key_here
+
+# SQL Database
+# PostgreSQL connection string
+DATABASE_URL=postgresql://username:password@host:port/database_name
+
+# n8n Workflow Automation
+# Your n8n instance at: https://n8n.aafiyat2u.net
+N8N_BASE_URL=https://n8n.aafiyat2u.net
+N8N_WEBHOOK_TOKEN=your_webhook_token_here
+N8N_API_KEY=your_n8n_api_key_here
+
+# AI Agent
+# Your AI agent service URL and API key
+AI_AGENT_URL=your_ai_agent_url_here
+AI_AGENT_API_KEY=your_ai_agent_api_key_here
+
+# Application Settings
+APP_NAME=Knowledge Management System
+APP_VERSION=1.0.0
+DEBUG=true
+LOG_LEVEL=INFO
+
+# Server Configuration
+HOST=0.0.0.0
+PORT=8000
+
+# Security
+SECRET_KEY=your_secret_key_here
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# File Upload Settings
+MAX_FILE_SIZE=10485760  # 10MB in bytes
+ALLOWED_FILE_TYPES=pdf,doc,docx,txt,md,csv,xlsx,xls
+
+# Vector Search Settings
+VECTOR_DIMENSIONS=1536
+SIMILARITY_THRESHOLD=0.7
+MAX_SEARCH_RESULTS=50
+
+# Analytics Settings
+ANALYTICS_ENABLED=true
+LOG_SEARCH_QUERIES=true
+LOG_DOCUMENT_ACCESS=true
+
+# Notification Settings
+EMAIL_NOTIFICATIONS=false
+SLACK_NOTIFICATIONS=false
+WEBHOOK_NOTIFICATIONS=true

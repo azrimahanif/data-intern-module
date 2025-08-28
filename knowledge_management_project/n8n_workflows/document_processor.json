@@ -1,0 +1,249 @@
+{
+  "name": "Document Processing Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "document-processing",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-trigger",
+      "name": "Document Processing Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.trigger }}",
+              "operation": "equal",
+              "value2": "document_processing"
+            }
+          ]
+        }
+      },
+      "id": "validate-trigger",
+      "name": "Validate Trigger",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract document data\nconst documentData = $input.first().json.data;\n\n// Log the document processing\nconsole.log('Processing document:', documentData.document_id);\n\n// Add processing timestamp\nconst processedData = {\n  ...documentData,\n  processed_at: new Date().toISOString(),\n  workflow_id: 'document_processor',\n  status: 'processing'\n};\n\nreturn processedData;"
+      },
+      "id": "extract-data",
+      "name": "Extract Document Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.QDRANT_URL }}/collections/knowledge_base/points/{{ $json.document_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "httpHeaderAuth": "={{ $env.QDRANT_API_KEY }}",
+        "options": {}
+      },
+      "id": "get-document",
+      "name": "Get Document from Qdrant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process document data\nconst documentData = $input.first().json;\nconst qdrantData = $('Get Document from Qdrant').first().json;\n\n// Extract relevant information\nconst processedInfo = {\n  document_id: documentData.document_id,\n  filename: documentData.filename,\n  status: documentData.status,\n  qdrant_status: qdrantData ? 'found' : 'not_found',\n  processing_metadata: {\n    workflow_execution_id: $execution.id,\n    processing_time: new Date().toISOString(),\n    qdrant_points_count: qdrantData?.result?.points?.length || 0\n  }\n};\n\nreturn processedInfo;"
+      },
+      "id": "process-info",
+      "name": "Process Document Info",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.DATABASE_URL.replace('postgresql://', 'http://') }}/api/documents/{{ $json.document_id }}/analytics",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "httpHeaderAuth": "Bearer {{ $env.DATABASE_API_KEY }}",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "processing_status",
+              "value": "={{ $json.status }}"
+            },
+            {
+              "name": "workflow_execution_id",
+              "value": "={{ $json.processing_metadata.workflow_execution_id }}"
+            }
+          ]
+        }
+      },
+      "id": "update-analytics",
+      "name": "Update Document Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.NOTIFICATION_WEBHOOK_URL }}",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "Document {{ $json.document_id }} processed successfully"
+            },
+            {
+              "name": "document_id",
+              "value": "={{ $json.document_id }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.status }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $json.processing_metadata.processing_time }}"
+            }
+          ]
+        }
+      },
+      "id": "send-notification",
+      "name": "Send Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare success response\nconst finalData = $input.first().json;\n\nreturn {\n  success: true,\n  message: 'Document processed successfully',\n  document_id: finalData.document_id,\n  workflow_execution_id: finalData.processing_metadata.workflow_execution_id,\n  processing_time: finalData.processing_metadata.processing_time,\n  status: 'completed'\n};"
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare error response\nconst errorData = $input.first().json;\n\nreturn {\n  success: false,\n  message: 'Document processing failed',\n  error: errorData.error || 'Unknown error',\n  document_id: errorData.document_id,\n  status: 'failed'\n};"
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 500]
+    }
+  ],
+  "connections": {
+    "Document Processing Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Document Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Document Data": {
+      "main": [
+        [
+          {
+            "node": "Get Document from Qdrant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Document from Qdrant": {
+      "main": [
+        [
+          {
+            "node": "Process Document Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Document Info": {
+      "main": [
+        [
+          {
+            "node": "Update Document Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Document Analytics": {
+      "main": [
+        [
+          {
+            "node": "Send Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Notification": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1.0.0",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "document-processor-workflow",
+  "tags": [
+    "document-processing",
+    "knowledge-management",
+    "automation"
+  ]
+}
