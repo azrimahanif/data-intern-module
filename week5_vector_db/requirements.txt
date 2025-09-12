@@ -1,0 +1,12 @@
+# Core dependencies
+sentence-transformers
+chromadb
+pinecone-client
+openai
+python-dotenv
+pytest
+
+# Optional but recommended
+numpy
+pandas
+tqdm

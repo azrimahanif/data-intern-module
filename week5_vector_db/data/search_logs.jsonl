@@ -1,0 +1,15 @@
+{"timestamp": "2025-09-08 16:46:39", "query": "example", "result_count": 1, "top_result": "doc_0", "runtime_ms": 1269.67}
+{"timestamp": "2025-09-08 16:49:59", "query": "example", "result_count": 1, "top_result": "doc_0", "runtime_ms": 4.84}
+{"timestamp": "2025-09-08 16:50:42", "query": "example", "result_count": 0, "top_result": null, "runtime_ms": 103.98}
+{"timestamp": "2025-09-08 16:52:04", "query": "example", "result_count": 1, "top_result": "doc_0", "runtime_ms": 67.44}
+{"timestamp": "2025-09-08 16:53:21", "query": "example", "result_count": 0, "top_result": null, "runtime_ms": 4.96}
+{"timestamp": "2025-09-08 16:53:58", "query": "machine learning", "result_count": 0, "top_result": null, "runtime_ms": 4.0}
+{"timestamp": "2025-09-08 16:56:54", "query": "machine learning", "result_count": 0, "top_result": null, "runtime_ms": 3.53}
+{"timestamp": "2025-09-08 16:59:17", "query": "machine learning", "result_count": 0, "top_result": null, "runtime_ms": 52.64}
+{"timestamp": "2025-09-08 17:02:54", "query": "machine learning", "result_count": 0, "top_result": null, "runtime_ms": 10.68}
+{"timestamp": "2025-09-08 17:03:03", "query": "machine learning", "result_count": 0, "top_result": null, "runtime_ms": 6.66}
+{"timestamp": "2025-09-09 11:53:34", "query": "example", "result_count": 1, "top_result": "doc_0", "runtime_ms": 158.05}
+{"timestamp": "2025-09-09 12:00:15", "query": "AI", "result_count": 0, "top_result": null, "runtime_ms": 39.26}
+{"timestamp": "2025-09-09 12:07:50", "query": "AI", "result_count": 1, "top_result": "doc_0", "runtime_ms": 110.59}
+{"timestamp": "2025-09-09 12:08:20", "query": "AI", "result_count": 0, "top_result": null, "runtime_ms": 28.51}
+{"timestamp": "2025-09-09 12:12:02", "query": "Artificial Intelligence", "result_count": 0, "top_result": null, "runtime_ms": 13.21}
